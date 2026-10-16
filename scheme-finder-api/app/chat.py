@@ -113,28 +113,40 @@ def generate_chat_answer(
 
     prompt = _build_grounded_prompt(question, relevant_schemes, language)
 
-    try:
-        client = genai.Client(api_key=gemini_api_key)
-        response = client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-        )
-        answer_text = response.text or ""
-        return ChatResponse(
-            answer=answer_text.strip(),
-            language=language,
-            sources=sources,
-            used_scheme_ids=used_ids,
-        )
-    except genai_errors.APIError as api_err:
-        logger.error("Gemini API Error: %s", api_err.message if hasattr(api_err, "message") else str(api_err))
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="The AI chat service is currently experiencing high load or quota limits. Please try again shortly.",
-        )
-    except Exception as exc:
-        logger.error("Unexpected error during Gemini invocation: %s", type(exc).__name__)
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="The AI chat service is temporarily unavailable. Please try again later.",
-        )
+    models_to_try = [model_name]
+    fallback_pool = ["gemini-flash-lite-latest", "gemini-3.8-flash", "gemini-flash-latest"]
+    for fb in fallback_pool:
+        if fb not in models_to_try:
+            models_to_try.append(fb)
+
+    last_error = None
+    client = genai.Client(api_key=gemini_api_key)
+
+    for current_model in models_to_try:
+        try:
+            response = client.models.generate_content(
+                model=current_model,
+                contents=prompt,
+            )
+            answer_text = response.text or ""
+            return ChatResponse(
+                answer=answer_text.strip(),
+                language=language,
+                sources=sources,
+                used_scheme_ids=used_ids,
+            )
+        except genai_errors.APIError as api_err:
+            last_error = api_err
+            err_msg = api_err.message if hasattr(api_err, "message") else str(api_err)
+            logger.warning("Gemini model '%s' error: %s. Trying fallback...", current_model, err_msg)
+            continue
+        except Exception as exc:
+            last_error = exc
+            logger.warning("Gemini invocation '%s' unexpected error: %s. Trying fallback...", current_model, exc)
+            continue
+
+    logger.error("All Gemini model attempts exhausted: %s", last_error)
+    raise HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail="The AI chat service is currently experiencing high load. Please try asking your question again in a moment.",
+    )
