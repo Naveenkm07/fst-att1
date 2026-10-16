@@ -1,0 +1,164 @@
+[
+  {
+    "id": "post-matric-scholarship-sc-st",
+    "name": "Post Matric Scholarship for SC/ST Students",
+    "name_kn": "ಎಸ್‌ಸಿ/ಎಸ್‌ಟಿ ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಮೆಟ್ರಿಕ್ ನಂತರದ ವಿದ್ಯಾರ್ಥಿವೇತನ",
+    "benefit": "Provides financial assistance to cover compulsory non-refundable fees and maintenance allowance for post-secondary education. Enables students from SC and ST communities to complete higher education.",
+    "criteria": [
+      {
+        "field": "occupation",
+        "op": "==",
+        "value": "student"
+      },
+      {
+        "field": "category",
+        "op": "in",
+        "value": ["SC", "ST"]
+      },
+      {
+        "field": "annual_income",
+        "op": "<=",
+        "value": 250000
+      }
+    ],
+    "source_url": "https://scholarships.gov.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  },
+  {
+    "id": "pm-jay-ayushman-bharat",
+    "name": "Ayushman Bharat - Pradhan Mantri Jan Arogya Yojana (PM-JAY)",
+    "name_kn": "ಆಯುಷ್ಮಾನ್ ಭಾರತ್ - ಪ್ರಧಾನ ಮಂತ್ರಿ ಜನ ಆರೋಗ್ಯ ಯೋಜನೆ",
+    "benefit": "Offers cashless health insurance coverage up to Rs 5 lakh per family per year for secondary and tertiary hospitalization care. Protects vulnerable families from catastrophic health expenditures.",
+    "criteria": [
+      {
+        "field": "annual_income",
+        "op": "<=",
+        "value": 200000
+      }
+    ],
+    "source_url": "https://pmjay.gov.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  },
+  {
+    "id": "pm-kisan-samman-nidhi",
+    "name": "PM-KISAN Samman Nidhi",
+    "name_kn": "ಪ್ರಧಾನ ಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ",
+    "benefit": "Transfers income support of Rs 6,000 per year in three equal installments directly into the bank accounts of landholding farmer families. Helps meet agricultural expenses and domestic needs.",
+    "criteria": [
+      {
+        "field": "occupation",
+        "op": "==",
+        "value": "farmer"
+      }
+    ],
+    "source_url": "https://pmkisan.gov.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  },
+  {
+    "id": "yuva-nidhi-karnataka",
+    "name": "Yuva Nidhi Scheme Karnataka",
+    "name_kn": "ಯುವ ನಿಧಿ ಯೋಜನೆ ಕರ್ನಾಟಕ",
+    "benefit": "Provides monthly unemployment assistance of Rs 3,000 for degree holders and Rs 1,500 for diploma holders who graduated in recent academic years. Supports unemployed youth in Karnataka while they seek employment or skill training.",
+    "criteria": [
+      {
+        "field": "state",
+        "op": "==",
+        "value": "Karnataka"
+      },
+      {
+        "field": "occupation",
+        "op": "==",
+        "value": "unemployed"
+      },
+      {
+        "field": "age",
+        "op": ">=",
+        "value": 18
+      },
+      {
+        "field": "age",
+        "op": "<=",
+        "value": 30
+      }
+    ],
+    "source_url": "https://sevasindhu.karnataka.gov.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  },
+  {
+    "id": "gruha-lakshmi-karnataka",
+    "name": "Gruha Lakshmi Scheme Karnataka",
+    "name_kn": "ಗೃಹ ಲಕ್ಷ್ಮಿ ಯೋಜನೆ ಕರ್ನಾಟಕ",
+    "benefit": "Provides monthly financial assistance of Rs 2,000 to the woman head of eligible households in Karnataka. Promotes women empowerment and eases household financial burdens.",
+    "criteria": [
+      {
+        "field": "state",
+        "op": "==",
+        "value": "Karnataka"
+      },
+      {
+        "field": "occupation",
+        "op": "==",
+        "value": "homemaker"
+      },
+      {
+        "field": "age",
+        "op": ">=",
+        "value": 18
+      },
+      {
+        "field": "annual_income",
+        "op": "<=",
+        "value": 200000
+      }
+    ],
+    "source_url": "https://sevasindhu.karnataka.gov.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  },
+  {
+    "id": "pm-svanidhi",
+    "name": "PM Street Vendor's AtmaNirbhar Nidhi (PM SVANidhi)",
+    "name_kn": "ಪಿಎಂ ಬೀದಿ ವ್ಯಾಪಾರಿಗಳ ಆತ್ಮನಿರ್ಭರ ನಿಧಿ (ಪಿಎಂ ಸ್ವನಿಧಿ)",
+    "benefit": "Provides collateral-free working capital micro-loans starting from Rs 10,000 to street vendors and self-employed urban micro-entrepreneurs. Incentivizes regular repayments through interest subsidies and digital cashbacks.",
+    "criteria": [
+      {
+        "field": "occupation",
+        "op": "in",
+        "value": ["self_employed", "daily_wage"]
+      },
+      {
+        "field": "age",
+        "op": ">=",
+        "value": 18
+      }
+    ],
+    "source_url": "https://pmsvanidhi.mohua.gov.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  },
+  {
+    "id": "ignoa-pension-scheme",
+    "name": "Indira Gandhi National Old Age Pension Scheme (IGNOAPS)",
+    "name_kn": "ಇಂದಿರಾ ಗಾಂಧಿ ರಾಷ್ಟ್ರೀಯ ವೃದ್ಧಾಪ್ಯ ಪಿಂಚಣಿ ಯೋಜನೆ",
+    "benefit": "Provides a monthly social security pension to senior citizens living below the poverty line. Ensures basic dignity and sustenance for elderly citizens without independent support.",
+    "criteria": [
+      {
+        "field": "age",
+        "op": ">=",
+        "value": 60
+      },
+      {
+        "field": "annual_income",
+        "op": "<=",
+        "value": 100000
+      }
+    ],
+    "source_url": "https://nsap.nic.in",
+    "last_verified": null,
+    "status": "draft_unverified"
+  }
+]
