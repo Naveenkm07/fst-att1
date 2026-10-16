@@ -102,7 +102,7 @@ def generate_chat_answer(
     used_ids = [s.get("id") for s in relevant_schemes if s.get("id")]
 
     gemini_api_key = os.getenv("GEMINI_API_KEY", "").strip()
-    model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash").strip()
+    model_name = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest").strip()
 
     if not gemini_api_key:
         logger.warning("GEMINI_API_KEY not configured. Returning 503.")
