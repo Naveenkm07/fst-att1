@@ -31,12 +31,15 @@ app = FastAPI(
 )
 
 # CORS setup
-cors_origins_env = os.getenv("CORS_ORIGINS", "http://localhost:5173")
+cors_origins_env = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
 origins = [origin.strip() for origin in cors_origins_env.split(",") if origin.strip()]
+for default_origin in ["http://localhost:5173", "http://127.0.0.1:5173"]:
+    if default_origin not in origins:
+        origins.append(default_origin)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins if origins else ["http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
