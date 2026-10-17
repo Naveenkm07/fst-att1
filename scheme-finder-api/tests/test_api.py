@@ -94,3 +94,35 @@ def test_chat_with_no_matching_records_returns_fallback():
     assert "not found in the stored scheme records" in data["answer"]
     assert data["used_scheme_ids"] == []
     assert "https://www.myscheme.gov.in" in data["sources"]
+
+
+def test_chat_with_gemini_failure_returns_grounded_record_fallback():
+    mock_gemini_client = MagicMock()
+    mock_gemini_client.models.generate_content.side_effect = Exception("Simulated network timeout")
+
+    with patch("os.getenv") as mock_env:
+        def getenv_side_effect(key, default=None):
+            if key == "GEMINI_API_KEY":
+                return "test-fake-key"
+            if key == "GEMINI_MODEL":
+                return "gemini-flash-lite-latest"
+            return default
+
+        mock_env.side_effect = getenv_side_effect
+
+        with patch("app.chat.genai.Client", return_value=mock_gemini_client):
+            response = client.post(
+                "/api/chat",
+                json={
+                    "question": "Tell me about farmer schemes",
+                    "profile": {"occupation": "farmer"},
+                },
+            )
+
+            assert response.status_code == 200
+            data = response.json()
+            assert data["language"] == "en"
+            assert "Based on official government records" in data["answer"]
+            assert "PM-KISAN" in data["answer"]
+            assert len(data["sources"]) > 0
+

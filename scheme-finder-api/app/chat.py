@@ -71,6 +71,33 @@ Answer:"""
     return prompt
 
 
+def _build_offline_fallback_answer(
+    records: List[Dict[str, Any]],
+    language: str,
+) -> str:
+    """Construct an official grounded response directly from stored scheme records if LLM is unreachable."""
+    if language == "kn":
+        lines = ["ಅಧಿಕೃತ ಯೋಜನಾ ದಾಖಲೆಗಳ ಪ್ರಕಾರ ಸಂಬಂಧಿತ ಮಾಹಿತಿಯು ಹೀಗಿದೆ:"]
+        for r in records[:3]:
+            name = r.get("name_kn") or r.get("name", "")
+            benefit = r.get("benefit", "")
+            lines.append(f"\n• {name}:\n  {benefit}")
+        lines.append(
+            "\n\nಗಮನಿಸಿ: ಅರ್ಹತೆಯನ್ನು ಅರ್ಹತಾ ಪರೀಕ್ಷಕರು (deterministic eligibility checker) ಮಾತ್ರ ನಿರ್ಧರಿಸುತ್ತಾರೆ. ಹೆಚ್ಚಿನ ವಿವರಗಳಿಗಾಗಿ ಮತ್ತು ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ಅಧಿಕೃತ ಸರ್ಕಾರಿ ಪೋರ್ಟಲ್ (https://www.myscheme.gov.in) ಪರಿಶೀಲಿಸಿ."
+        )
+        return "\n".join(lines)
+    else:
+        lines = ["Based on official government records, here is the relevant scheme information:"]
+        for r in records[:3]:
+            name = r.get("name", "")
+            benefit = r.get("benefit", "")
+            lines.append(f"\n• {name}:\n  {benefit}")
+        lines.append(
+            "\n\nNote: Eligibility verdicts are determined exclusively by the deterministic eligibility checker. For verified guidelines and application procedures, please check the official government portal (https://www.myscheme.gov.in)."
+        )
+        return "\n".join(lines)
+
+
 def generate_chat_answer(
     question: str,
     all_schemes: List[Dict[str, Any]],
@@ -105,10 +132,12 @@ def generate_chat_answer(
     model_name = os.getenv("GEMINI_MODEL", "gemini-flash-lite-latest").strip()
 
     if not gemini_api_key:
-        logger.warning("GEMINI_API_KEY not configured. Returning 503.")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="The AI chat service is currently unavailable. Please verify GEMINI_API_KEY in backend .env.",
+        logger.warning("GEMINI_API_KEY not configured. Returning grounded record fallback.")
+        return ChatResponse(
+            answer=_build_offline_fallback_answer(relevant_schemes, language),
+            language=language,
+            sources=sources,
+            used_scheme_ids=used_ids,
         )
 
     prompt = _build_grounded_prompt(question, relevant_schemes, language)
@@ -120,7 +149,16 @@ def generate_chat_answer(
             models_to_try.append(fb)
 
     last_error = None
-    client = genai.Client(api_key=gemini_api_key)
+    try:
+        client = genai.Client(api_key=gemini_api_key)
+    except Exception as init_err:
+        logger.warning("Failed to initialize Gemini Client: %s. Using record fallback.", init_err)
+        return ChatResponse(
+            answer=_build_offline_fallback_answer(relevant_schemes, language),
+            language=language,
+            sources=sources,
+            used_scheme_ids=used_ids,
+        )
 
     for current_model in models_to_try:
         try:
@@ -145,8 +183,11 @@ def generate_chat_answer(
             logger.warning("Gemini invocation '%s' unexpected error: %s. Trying fallback...", current_model, exc)
             continue
 
-    logger.error("All Gemini model attempts exhausted: %s", last_error)
-    raise HTTPException(
-        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-        detail="The AI chat service is currently experiencing high load. Please try asking your question again in a moment.",
+    logger.warning("All Gemini model attempts exhausted (%s). Returning grounded record fallback.", last_error)
+    return ChatResponse(
+        answer=_build_offline_fallback_answer(relevant_schemes, language),
+        language=language,
+        sources=sources,
+        used_scheme_ids=used_ids,
     )
+

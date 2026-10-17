@@ -44,3 +44,5 @@ yarn-error.log*
 *.swo
 Thumbs.db
 .DS_Store
+
+.vercel

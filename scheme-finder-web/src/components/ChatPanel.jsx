@@ -51,19 +51,18 @@ export default function ChatPanel({ profile, lang, t }) {
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
       console.error("Chat error:", err);
-      setError(
-        err.message ||
-          "Could not reach the assistant. Please check your backend connection."
+      const displayErrorMessage = err.message || (
+        lang === "kn"
+          ? "ಕ್ಷಮಿಸಿ, ಉತ್ತರಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರ್ವರ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ."
+          : "I apologize, but I could not retrieve an answer at this time. Please try again in a moment."
       );
+      setError(err.message || null);
       setMessages((prev) => [
         ...prev,
         {
           id: `bot-err-${Date.now()}`,
           sender: "bot",
-          text:
-            lang === "kn"
-              ? "ಕ್ಷಮಿಸಿ, ಉತ್ತರಿಸಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ. ದಯವಿಟ್ಟು ಸರ್ವರ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ."
-              : "I apologize, but I could not retrieve an answer at this time. Please ensure the backend is running.",
+          text: displayErrorMessage,
           sources: ["https://www.myscheme.gov.in"],
           isError: true,
         },

@@ -1,0 +1,11 @@
+{
+  "name": "scheme-finder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Government Scheme Finder Bot - Full Stack Application",
+  "scripts": {
+    "build": "npm --prefix scheme-finder-web install && npm --prefix scheme-finder-web run build",
+    "lint": "npm --prefix scheme-finder-web run lint",
+    "dev": "npm --prefix scheme-finder-web run dev"
+  }
+}

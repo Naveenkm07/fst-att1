@@ -58,5 +58,24 @@
   "occ_unemployed": "Unemployed / Job Seeker",
   "occ_homemaker": "Homemaker",
   "occ_retired": "Retired / Senior Citizen",
-  "occ_other": "Other"
+  "occ_other": "Other",
+  "cookieBannerTitle": "Cookie & Citizen Privacy Notice",
+  "cookieBannerText": "We use strictly necessary cookies to save your language choice and display preferences. We do not use advertising, tracking, or profiling cookies. Your profile answers are 100% stateless and never sold.",
+  "cookieAcceptAll": "Accept All",
+  "cookieEssentialOnly": "Essential Only",
+  "cookieLearnMore": "Cookie Policy & Details",
+  "cookieModalTitle": "Civic Privacy & Cookie Transparency",
+  "cookieModalSubtitle": "In compliance with India's Digital Personal Data Protection (DPDP) Act 2023",
+  "cookiePledgeTitle": "Our Citizen Privacy Guarantee",
+  "cookiePledgeText": "This tool is built with a strict 'Privacy by Design' architecture. The 5 demographic questions you answer (Age, Income, State, Social Category, and Occupation) are evaluated in-memory and are NEVER stored in persistent cookies, local storage, or external ad networks.",
+  "cookieEssentialTitle": "1. Strictly Essential Cookies (Always Active)",
+  "cookieEssentialDesc": "These cookies and session keys are required for core site functionality, including remembering your selected language (English or ಕನ್ನಡ), keeping theme rendering stable, and storing your cookie preferences.",
+  "cookiePrefsTitle": "2. Preference & Accessibility Cookies",
+  "cookiePrefsDesc": "Used to remember user interface adjustments such as font scaling, display contrast, and recent questionnaire state within your active browser session.",
+  "cookieAnalyticsTitle": "3. Anonymous Telemetry & Performance",
+  "cookieAnalyticsDesc": "Optional aggregated performance telemetry to ensure the FastAPI server and Vite frontend load under 500ms across 3G/4G networks in India. Zero personal identity or IP data is tracked.",
+  "cookieSavePreferences": "Save Preferences",
+  "cookieClose": "Close",
+  "cookieFooterLink": "Cookie Policy & Privacy"
 }
+

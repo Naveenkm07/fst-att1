@@ -3,6 +3,8 @@ import EligibilityForm from "./components/EligibilityForm";
 import ResultsList from "./components/ResultsList";
 import ChatPanel from "./components/ChatPanel";
 import Disclaimer from "./components/Disclaimer";
+import CookieBanner from "./components/CookieBanner";
+import CookieModal from "./components/CookieModal";
 import enTranslations from "./i18n/en.json";
 import knTranslations from "./i18n/kn.json";
 import { checkEligibility } from "./api";
@@ -22,6 +24,7 @@ export default function App() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isCookieModalOpen, setIsCookieModalOpen] = useState(false);
 
   const t = lang === "kn" ? knTranslations : enTranslations;
 
@@ -142,7 +145,24 @@ export default function App() {
       </main>
 
       {/* Mandatory Disclaimer Footer */}
-      <Disclaimer t={t} />
+      <Disclaimer
+        t={t}
+        onOpenCookieModal={() => setIsCookieModalOpen(true)}
+      />
+
+      {/* Modern Cookie Notice & Consent Banner */}
+      <CookieBanner
+        onOpenDetails={() => setIsCookieModalOpen(true)}
+        t={t}
+      />
+
+      {/* Full Cookie & Civic Privacy Policy Modal */}
+      <CookieModal
+        isOpen={isCookieModalOpen}
+        onClose={() => setIsCookieModalOpen(false)}
+        t={t}
+      />
     </div>
   );
 }
+

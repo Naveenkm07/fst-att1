@@ -20,15 +20,25 @@ def get_mongo_uri() -> str:
 
 def get_schemes_file_path() -> Path:
     """Locate data/schemes.json file across execution directories."""
-    candidates = [
-        Path(__file__).resolve().parents[2] / "data" / "schemes.json",
+    here = Path(__file__).resolve()
+    candidates = []
+    data_dir_env = os.getenv("DATA_DIR")
+    if data_dir_env:
+        candidates.append(Path(data_dir_env) / "schemes.json")
+
+    candidates.extend([
+        here.parents[2] / "data" / "schemes.json" if len(here.parents) > 2 else here.parent / "data" / "schemes.json",
+        here.parents[1] / "data" / "schemes.json" if len(here.parents) > 1 else here.parent / "data" / "schemes.json",
         Path.cwd() / "data" / "schemes.json",
+        Path.cwd() / "scheme-finder" / "data" / "schemes.json",
         Path.cwd().parent / "data" / "schemes.json",
-    ]
+    ])
     for p in candidates:
         if p.exists():
             return p
     return candidates[0]
+
+
 
 
 def load_schemes_from_file() -> List[Dict[str, Any]]:

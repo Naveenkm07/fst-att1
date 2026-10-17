@@ -46,14 +46,19 @@ app.add_middleware(
 )
 
 
-@app.get("/api/health", summary="Health check endpoint")
+from fastapi import APIRouter
+
+router = APIRouter()
+
+
+@router.get("/health", summary="Health check endpoint")
 def health_check():
     """Return health status."""
     return {"status": "ok"}
 
 
-@app.post(
-    "/api/eligibility",
+@router.post(
+    "/eligibility",
     response_model=List[EligibilityResult],
     summary="Evaluate citizen eligibility for government schemes",
 )
@@ -89,8 +94,8 @@ def evaluate_eligibility(
     return results
 
 
-@app.get(
-    "/api/schemes/{scheme_id}",
+@router.get(
+    "/schemes/{scheme_id}",
     response_model=Scheme,
     summary="Get details of a specific scheme by ID",
 )
@@ -105,8 +110,8 @@ def get_scheme(scheme_id: str):
     return scheme
 
 
-@app.post(
-    "/api/chat",
+@router.post(
+    "/chat",
     response_model=ChatResponse,
     summary="Grounded chatbot for scheme explanations",
 )
@@ -118,3 +123,33 @@ def chat_with_schemes(payload: ChatRequest):
         all_schemes=all_schemes,
         profile=payload.profile,
     )
+
+
+from fastapi.staticfiles import StaticFiles
+
+
+def find_frontend_dist() -> Optional[Path]:
+    """Locate frontend dist directory across local and deployed environments."""
+    here = Path(__file__).resolve()
+    candidates = [
+        here.parents[2] / "scheme-finder-web" / "dist" if len(here.parents) > 2 else None,
+        here.parents[1] / "scheme-finder-web" / "dist" if len(here.parents) > 1 else None,
+        Path.cwd() / "scheme-finder-web" / "dist",
+        Path.cwd() / "dist",
+    ]
+    for c in candidates:
+        if c and c.exists() and (c / "index.html").exists():
+            return c
+    return None
+
+
+# Register routes under both /api prefix (local / standard) and root prefix (fallback)
+app.include_router(router, prefix="/api")
+app.include_router(router)
+
+# Mount frontend static distribution if available (serves HTML, JS, CSS on root /)
+frontend_dist = find_frontend_dist()
+if frontend_dist:
+    app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="static")
+
+

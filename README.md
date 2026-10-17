@@ -2,6 +2,21 @@
 **Full Stack Technologies Course Project (AAT-1)**  
 **Author:** Naveen, Department of Computer Science & Engineering, New Horizon College of Engineering (NHCE), Bengaluru.
 
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Live_Production-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://scheme-finder-ten-nu.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Naveenkm07%2Ffst--att1-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Naveenkm07/fst-att1)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React 19](https://img.shields.io/badge/React_19-Vite_SPA-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Python Tests](https://img.shields.io/badge/pytest-15_Passed-4B8BBE?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
+
+---
+
+## 🌐 Live Production Deployment
+- **Live Vercel Application:** [https://scheme-finder-ten-nu.vercel.app](https://scheme-finder-ten-nu.vercel.app)
+- **API Health Endpoint:** [https://scheme-finder-ten-nu.vercel.app/api/health](https://scheme-finder-ten-nu.vercel.app/api/health)
+- **Eligibility Endpoint:** `POST https://scheme-finder-ten-nu.vercel.app/api/eligibility`
+- **Grounded Chatbot Endpoint:** `POST https://scheme-finder-ten-nu.vercel.app/api/chat`
+- **GitHub Repository:** [https://github.com/Naveenkm07/fst-att1](https://github.com/Naveenkm07/fst-att1)
+
 ---
 
 ## 1. Project Overview
@@ -19,9 +34,12 @@ A citizen fills out a short, optional 5-question profile (Age, Annual Income, St
 - **Support for Partial Profiles:** If fields are omitted, the engine categorizes schemes under *"May be eligible: add details"* and indicates exactly which fields are missing.
 - **Bilingual Interface (English & Kannada):** Full dynamic i18n localization with instant language switching (`en` and `kn`).
 - **Grounded Bilingual Assistant:** Follow-up chat powered by Google Gemini using the `google-genai` SDK, with automatic Kannada script detection via Unicode character data.
+- **Offline Grounded Fallback:** If the external AI service is unreachable, the assistant seamlessly falls back to an offline rule-grounded generator providing verified scheme benefits and official links with zero hallucination.
 - **Official Portals Only:** Every scheme record links strictly to verified government domains (`myscheme.gov.in`, `scholarships.gov.in`, `pmjay.gov.in`, `sevasindhu.karnataka.gov.in`, etc.).
-- **Responsive down to 360px:** Accessible, mobile-friendly UI crafted with plain CSS and semantic HTML, with no third-party CSS bloat.
-- **Zero LocalStorage:** Stateless citizen privacy by design; no user profiling data is persisted in browser storage.
+- **Modern Cookie & Civic Privacy System:** DPDP Act 2023 compliant floating glassmorphism cookie consent banner and interactive preference modal with granular category controls (Essential, Language Preferences, and Telemetry).
+- **Zero Profiling Storage:** Citizen demographic answers are never written to LocalStorage or server logs; sessions remain strictly client-side and ephemeral.
+- **Responsive down to 360px:** Accessible, mobile-friendly UI crafted with plain modern CSS and semantic HTML, with no third-party CSS bloat.
+- **Vercel Serverless Full-Stack:** FastAPI backend and React frontend deployed unified on Vercel with single-domain routing.
 
 ---
 
@@ -33,9 +51,11 @@ A citizen fills out a short, optional 5-question profile (Age, Annual Income, St
 | **Backend API** | FastAPI + Uvicorn | Python 3.11+ asynchronous REST API with Pydantic v2 data models |
 | **Rule Engine** | Pure Python 3 | Deterministic rule evaluation (`<=`, `>=`, `==`, `in`) with zero external I/O |
 | **Database** | MongoDB via pymongo | Document store for schemes collection with automatic JSON fallback |
-| **AI / LLM** | Google Gemini | Official `google-genai` SDK with strict grounding instructions |
-| **Configuration** | `python-dotenv` | Clean `.env` management with `.env.example` templates |
-| **Testing** | pytest & Vite Build | Full backend unit and integration test suite; Vite production bundle |
+| **AI / LLM** | Google Gemini | Official `google-genai` SDK (`gemini-2.5-flash`) with strict grounding instructions |
+| **Offline Fallback**| Python Rule Grounding | Fallback generator delivering verified records when external AI is offline |
+| **Privacy / DPDP** | Custom Cookie System | Granular consent manager conforming to Digital Personal Data Protection Act 2023 |
+| **Hosting** | Vercel Serverless | Python Serverless Function + Vite Static Frontend on `https://scheme-finder-ten-nu.vercel.app` |
+| **Testing & Lint** | pytest & oxlint | 15 unit/integration tests and oxlint zero-error clean static validation |
 
 ---
 
@@ -46,37 +66,41 @@ A citizen fills out a short, optional 5-question profile (Age, Annual Income, St
 |                                  BROWSER (CITIZEN)                                |
 |  React + Vite SPA (Plain CSS, Mobile-Responsive down to 360px, English/Kannada)    |
 |                                                                                   |
-|  [ Questionnaire Form ]            [ Results List ]           [ Chat Panel ]      |
-|  (Age, Income, State, Cat, Occ)    (Eligible / Maybe)        (English & Kannada)  |
-+--------------------------+------------------------------------------+-------------+
-                           | fetch()                                  | fetch()
-                           v                                          v
+|  [ Questionnaire Form ]    [ Results List ]    [ Chat Panel ]    [ Cookie Modal ] |
+|  (Age, Income, State...)   (Eligible / Maybe)  (Bilingual Chat)  (DPDP 2023 Mgmt) |
++--------------------------+-------------------+-----------------+------------------+
+                           | fetch()           | fetch()
+                           v                   v
 +-----------------------------------------------------------------------------------+
-|                             FASTAPI BACKEND SERVER                                |
+|                 VERCEL FULL-STACK SERVERLESS HOSTING (api/index.py)               |
 |                                                                                   |
-|  POST /api/eligibility                           POST /api/chat                   |
-|         |                                                |                        |
-|         v                                                v                        |
-|  +---------------------------+             +---------------------------+          |
-|  |   ELIGIBILITY ENGINE      |             |     RETRIEVAL MODULE      |          |
-|  |   (eligibility.py)        |             |     (retrieval.py)        |          |
-|  |   Deterministic Rules:    |             |   - Filters candidates    |          |
-|  |   <=, >=, ==, in          |             |   - Keyword token overlap |          |
-|  |   (No LLM, No Halluc.)    |             |   - Top 5 candidate pool  |          |
-|  +-------------+-------------+             +-------------+-------------+          |
-|                |                                         |                        |
-|                |                                         v                        |
-|                |                           +---------------------------+          |
-|                |                           |      CHAT MODULE          |          |
-|                |                           |      (chat.py)            |          |
-|                |                           |   - unicodedata lang det  |          |
-|                |                           |   - Grounded prompt       |          |
-|                |                           |   - google-genai SDK      |          |
-|                |                           +-------------+-------------+          |
-|                |                                         |                        |
-|                +--------------------+                    v                        |
-|                                     |          Google Gemini LLM                  |
-|                                     v          (gemini-2.5-flash)                 |
+|  Static Asset Delivery:                              API Routing:                 |
+|  /* -> FastAPI mounts scheme-finder-web/dist         /api/* -> FastAPI Router     |
+|                                                                                   |
+|  POST /api/eligibility                               POST /api/chat               |
+|         |                                                   |                     |
+|         v                                                   v                     |
+|  +---------------------------+                +---------------------------+       |
+|  |   ELIGIBILITY ENGINE      |                |     RETRIEVAL MODULE      |       |
+|  |   (eligibility.py)        |                |     (retrieval.py)        |       |
+|  |   Deterministic Rules:    |                |   - Filters candidates    |       |
+|  |   <=, >=, ==, in          |                |   - Keyword token overlap |       |
+|  |   (No LLM, No Halluc.)    |                |   - Top 5 candidate pool  |       |
+|  +-------------+-------------+                +-------------+-------------+       |
+|                |                                            |                     |
+|                |                                            v                     |
+|                |                              +---------------------------+       |
+|                |                              |      CHAT MODULE          |       |
+|                |                              |      (chat.py)            |       |
+|                |                              |   - unicodedata lang det  |       |
+|                |                              |   - Grounded prompt       |       |
+|                |                              |   - google-genai SDK      |       |
+|                |                              |   - Offline grounded fb   |       |
+|                |                              +-------------+-------------+       |
+|                |                                            |                     |
+|                +--------------------+                       v                     |
+|                                     |             Google Gemini / Fallback        |
+|                                     v             (gemini-2.5-flash)              |
 |                        +---------------------------+                              |
 |                        |      DATA LAYER           |                              |
 |                        |      (db.py)              |                              |
@@ -91,18 +115,23 @@ A citizen fills out a short, optional 5-question profile (Age, Annual Income, St
 ## 5. Repository Layout
 ```
 scheme-finder/
-  README.md                 # Complete documentation and setup guide
-  .gitignore                # Excludes virtual environments, secrets, node_modules, and dist
+  README.md                 # Complete documentation, architecture, and live links
+  vercel.json               # Vercel deployment configuration & build scripts
+  package.json              # Monorepo build script orchestrating web build
+  requirements.txt          # Python dependencies for Vercel deployment runtime
+  api/
+    index.py                # Vercel Serverless Function entrypoint mounting FastAPI
+    requirements.txt        # Serverless Python requirements
   data/
     schemes.json            # Seed dataset with 7 official government schemes
   scheme-finder-api/
     app/
       __init__.py
-      main.py               # FastAPI app, CORS middleware, routes
+      main.py               # FastAPI app, dual static/API routing, CORS
       models.py             # Pydantic v2 schemas and enums
       eligibility.py        # Pure deterministic rule engine (no DB/IO)
       retrieval.py          # Candidate scheme retrieval for chat
-      chat.py               # Kannada detection, grounded prompt, Gemini call
+      chat.py               # Kannada detection, grounded prompt, offline fallback
       db.py                 # MongoDB connection with graceful file fallback
     scripts/
       __init__.py
@@ -110,25 +139,27 @@ scheme-finder/
     tests/
       __init__.py
       test_eligibility.py   # Unit tests for eligibility engine
-      test_api.py           # FastAPI TestClient endpoint integration tests
+      test_api.py           # FastAPI TestClient endpoint integration tests (15 total)
     requirements.txt        # Python backend dependencies
     .env.example            # Environment variables template
   scheme-finder-web/
     src/
       App.jsx               # Main SPA view switcher and language manager
-      api.js                # Native fetch client
-      styles.css            # Responsive styles and design tokens
+      api.js                # Native fetch client (auto-detects origin/Vercel)
+      styles.css            # Responsive styles, design tokens, glassmorphism
       components/
         EligibilityForm.jsx # 5-field questionnaire form
         ResultsList.jsx     # Grouped results (Eligible & May Be Eligible)
         SchemeCard.jsx      # Individual scheme card with badges & portal links
         ChatPanel.jsx       # Bilingual chat interface with sources
-        Disclaimer.jsx      # Persistent official guidance notice
+        Disclaimer.jsx      # Official guidance notice with Cookie Policy trigger
+        CookieBanner.jsx    # Floating glassmorphic Cookie consent notification
+        CookieModal.jsx     # DPDP Act 2023 interactive preferences dialog
       i18n/
         en.json             # English translations
         kn.json             # Native Kannada translations
       main.jsx              # React DOM entrypoint
-    package.json            # Node project configuration
+    package.json            # Node project configuration & oxlint
     vite.config.js          # Vite build configuration
     index.html              # HTML shell with accessibility and SEO tags
 ```
@@ -218,7 +249,42 @@ The API documentation is available at:
 
 ---
 
-## 7. API Reference & cURL Examples
+## 7. Vercel Serverless Full-Stack Deployment
+
+The project is deployed live on Vercel as a unified full-stack serverless application:
+- **Production URL:** [https://scheme-finder-ten-nu.vercel.app](https://scheme-finder-ten-nu.vercel.app)
+
+### How It Works:
+1. **Automated Monorepo Build:** `vercel.json` and root `package.json` trigger the Vite build (`npm --prefix scheme-finder-web run build`), compiling the React SPA into static production assets at `scheme-finder-web/dist`.
+2. **Serverless Function Entrypoint (`api/index.py`):** Vercel provisions a high-performance Python 3.12 runtime. `api/index.py` boots the FastAPI application from `scheme-finder-api/app/main.py`.
+3. **Dual-Mode FastAPI Routing:**
+   - FastAPI mounts `scheme-finder-web/dist` as static files at root (`/`), serving `index.html` and bundled assets.
+   - All backend routes are bound to `/api/*` (`/api/health`, `/api/eligibility`, `/api/chat`, `/api/schemes/{id}`).
+   - **Zero CORS Issues:** Frontend and Backend share the exact same domain origin, guaranteeing zero cross-origin latency or pre-flight blockers.
+4. **Resilient Data Fallback:** The runtime discovers `data/schemes.json` directly via `DATA_DIR` environment variables, operating independently even without an active MongoDB connection.
+
+---
+
+## 8. Cookie & Civic Privacy System (DPDP Act 2023)
+
+In accordance with India's **Digital Personal Data Protection Act (DPDP Act 2023)** and global privacy standards, the Government Scheme Finder Bot implements a transparent, citizen-centric privacy architecture:
+
+### 1. Floating Glassmorphism Consent Banner
+- Appears seamlessly on initial citizen visits with a sleek, non-intrusive backdrop-filtered design.
+- Offers three clear choices: **Accept All**, **Essential Only**, or **Customize Settings / Cookie Policy**.
+
+### 2. Granular Privacy & Preference Modal
+- **Strictly Essential (Always Active):** Ephemeral security tokens and session rendering. Zero personal data tracked.
+- **Functional & Language Preferences (Configurable):** Remembers the citizen's preferred dialect (English or ಕನ್ನಡ) for accessibility across visits.
+- **Anonymous Telemetry (Configurable, Default Off):** Aggregated metrics used solely to count popular scheme lookups to help governments optimize welfare delivery.
+
+### 3. Absolute Civic Privacy Guarantee
+- **Zero Demographic Tracking:** Age, income, caste, state, and occupation filled out during the eligibility assessment are **never** stored in cookies or local storage.
+- **Stateless Questionnaire:** Once the browser tab is closed, all answers are immediately cleared.
+
+---
+
+## 9. API Reference & cURL Examples
 
 ### 1. Health Check
 - **Endpoint:** `GET /api/health`
@@ -310,7 +376,7 @@ The API documentation is available at:
 - **Response Example:**
   ```json
   {
-    "answer": "ರೈತರಿಗೆ ಪ್ರಧಾನ ಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ (PM-KISAN) ಯೋಜನೆಯು ಲಭ್ಯವಿದೆ...",
+    "answer": "ರೈತರಿಗೆ ಪ್ರಧಾನ ಮಮಂತ್ರಿ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ (PM-KISAN) ಯೋಜನೆಯು ಲಭ್ಯವಿದೆ...",
     "language": "kn",
     "sources": ["https://pmkisan.gov.in"],
     "used_scheme_ids": ["pm-kisan-samman-nidhi"]
@@ -319,7 +385,7 @@ The API documentation is available at:
 
 ---
 
-## 8. UI Screenshots
+## 10. UI Screenshots & System Walkthrough
 
 ### 1. Questionnaire Form (English View)
 ```
@@ -380,26 +446,49 @@ The API documentation is available at:
 +-----------------------------------------------------------------------------------+
 ```
 
+### 4. DPDP 2023 Cookie & Privacy Settings Modal
+```
++-----------------------------------------------------------------------------------+
+| 🍪 Cookie & Civic Privacy Preferences                                      [ ✕ ]  |
+| Digital Personal Data Protection (DPDP) Act 2023 Compliant Transparency           |
++-----------------------------------------------------------------------------------+
+| [✓] Strictly Essential Cookies (Always Active)                                    |
+|     Required for CSRF security, basic app routing, and session rendering.        |
+|                                                                                   |
+| [✓] Functional & Language Preferences (Configurable)                              |
+|     Saves your language selection (English / ಕನ್ನಡ) for subsequent visits.        |
+|                                                                                   |
+| [ ] Anonymous Usage Telemetry (Configurable)                                      |
+|     Aggregate, non-identifying telemetry to evaluate welfare scheme discovery.   |
+|                                                                                   |
+| 🔒 Civic Privacy Guarantee: Your demographic answers (Age, Income, Caste) are    |
+|    NEVER stored in cookies or local storage. All inputs remain ephemeral.        |
+|                                                                                   |
+| [ Save Preferences ]                    [ Accept All ]                            |
++-----------------------------------------------------------------------------------+
+```
+
 ---
 
-## 9. Testing & Quality Assurance
+## 11. Testing & Quality Assurance
 
 ### Backend Tests (pytest)
-The backend test suite covers:
-1. `test_all_criteria_met_returns_eligible`
-2. `test_income_above_limit_returns_not_eligible`
-3. `test_missing_income_returns_possibly_eligible`
-4. `test_wrong_category_returns_not_eligible`
-5. `test_unknown_operator_raises_value_error`
-6. `test_empty_criteria_returns_eligible`
-7. `test_missing_field_when_another_fails_returns_not_eligible`
-8. `test_none_profile_returns_possibly_eligible_with_all_criteria_fields`
-9. `/api/health` returns 200
-10. `/api/eligibility` with negative age returns 422 Unprocessable Entity
-11. `/api/eligibility` returns structured verdicts for citizen profiles
-12. Unknown scheme ID returns 404 Not Found
-13. Chatbot with mocked Gemini answers in Kannada for Kannada queries
-14. Chatbot with no matching records returns safe ungrounded fallback message
+The backend test suite covers 15 comprehensive unit and integration tests:
+1. `test_all_criteria_met_returns_eligible`: Validates strict positive eligibility match.
+2. `test_income_above_limit_returns_not_eligible`: Ensures income thresholds are strictly enforced.
+3. `test_missing_income_returns_possibly_eligible`: Checks that missing income returns "possibly eligible" with specific missing field annotation.
+4. `test_wrong_category_returns_not_eligible`: Verifies category exclusion rules.
+5. `test_unknown_operator_raises_value_error`: Validates error handling for unsupported criteria operators.
+6. `test_empty_criteria_returns_eligible`: Ensures universal schemes with no restrictions are marked eligible.
+7. `test_missing_field_when_another_fails_returns_not_eligible`: Ensures failing a criterion overrides missing fields.
+8. `test_none_profile_returns_possibly_eligible_with_all_criteria_fields`: Handles blank citizen questionnaires correctly.
+9. `/api/health` returns 200: Verifies system health check status.
+10. `/api/eligibility` with negative age returns 422: Validates Pydantic schema validation.
+11. `/api/eligibility` returns structured verdicts: Confirms full integration pipeline output.
+12. Unknown scheme ID returns 404 Not Found: Verifies proper REST error handling.
+13. Chatbot with mocked Gemini answers in Kannada: Validates Kannada query routing and Unicode detection.
+14. Chatbot with no matching records returns safe fallback: Verifies safe ungrounded boundary response.
+15. Chatbot with offline fallback: Ensures structured facts and official sources are returned when Gemini API is disconnected.
 
 Run the backend test suite:
 ```bash
@@ -407,8 +496,15 @@ cd scheme-finder-api
 python -m pytest -v
 ```
 
-### Frontend Build Validation
-Verify that the frontend builds with zero syntax, JSX, or bundling errors:
+### Static Analysis & Linter (oxlint)
+The frontend codebase is validated with zero errors and zero warnings:
+```bash
+cd scheme-finder-web
+npm run lint
+```
+
+### Production Build Validation
+Verify that the frontend builds cleanly into optimized static assets in under 150ms:
 ```bash
 cd scheme-finder-web
 npm run build
@@ -416,7 +512,7 @@ npm run build
 
 ---
 
-## 10. Data Verification Note
+## 12. Data Verification Note
 > [!WARNING]
 > **Important Disclaimer on Thresholds & Criteria:**  
 > All income limits, age brackets, and eligibility thresholds in `data/schemes.json` are **placeholders** marked with `"status": "draft_unverified"` and `"last_verified": null`.  
@@ -424,13 +520,13 @@ npm run build
 
 ---
 
-## 11. Disclaimer
+## 13. Disclaimer
 **This tool gives guidance only. Verify eligibility and application details on official government portals.**  
 The Government Scheme Finder Bot is an academic project built for informational and educational purposes. Neither the application nor its developer guarantees scheme sanctions or approvals.
 
 ---
 
-## 12. Future Work
+## 14. Future Work
 - **Bhashini Voice Input & Output:** Integrate Government of India's [AI4Bharat / Bhashini API](https://bhashini.gov.in/) for native Kannada voice prompts and audio responses for rural and non-literate citizens.
 - **Pan-India Language Expansion:** Add Hindi, Tamil, Telugu, and Marathi localization.
 - **Admin Portal & Scheme CMS:** Role-based portal for welfare officers to update scheme quotas and eligibility rules with automated audit trails.
@@ -438,8 +534,9 @@ The Government Scheme Finder Bot is an academic project built for informational 
 
 ---
 
-## 13. Author & Acknowledgements
+## 15. Author & Acknowledgements
 - **Student Name:** Naveen
 - **College:** New Horizon College of Engineering (NHCE), Bengaluru
 - **Course:** Full Stack Technologies (AAT-1)
 - **Academic Year:** 2026
+
