@@ -50,7 +50,7 @@ def _build_grounded_prompt(
         else "Respond in clear, professional English."
     )
 
-    prompt = f"""You are the Government Scheme Finder Assistant for Naveen, NHCE Bengaluru.
+    prompt = f"""You are the Government Scheme Finder Assistant for Naveen Kumar KM (USN: 1NH24CS409), NHCE Bengaluru.
 You assist citizens by explaining official government schemes.
 
 Strict instructions you MUST follow:

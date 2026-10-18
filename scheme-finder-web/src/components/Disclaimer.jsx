@@ -13,7 +13,7 @@ export default function Disclaimer({ t, onOpenCookieModal }) {
       <div className="disclaimer-author">
         <span>{t.collegeTag || "NHCE Bengaluru • Full Stack Technologies (AAT-1)"}</span>
         <span className="divider">•</span>
-        <span>Naveen (1NH21CS...)</span>
+        <span>Naveen Kumar KM (1NH24CS409)</span>
         <span className="divider">•</span>
         <button
           type="button"

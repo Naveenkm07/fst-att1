@@ -1,6 +1,6 @@
 # Government Scheme Finder Bot 🏛️
 **Full Stack Technologies Course Project (AAT-1)**  
-**Author:** Naveen, Department of Computer Science & Engineering, New Horizon College of Engineering (NHCE), Bengaluru.
+**Author:** Naveen Kumar KM (USN: 1NH24CS409), Department of Computer Science & Engineering, New Horizon College of Engineering (NHCE), Bengaluru.
 
 [![Vercel Deployment](https://img.shields.io/badge/Vercel-Live_Production-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://scheme-finder-ten-nu.vercel.app)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Naveenkm07%2Ffst--att1-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Naveenkm07/fst-att1)
@@ -535,7 +535,8 @@ The Government Scheme Finder Bot is an academic project built for informational 
 ---
 
 ## 15. Author & Acknowledgements
-- **Student Name:** Naveen
+- **Student Name:** Naveen Kumar KM
+- **USN:** 1NH24CS409
 - **College:** New Horizon College of Engineering (NHCE), Bengaluru
 - **Course:** Full Stack Technologies (AAT-1)
 - **Academic Year:** 2026
