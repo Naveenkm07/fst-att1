@@ -254,6 +254,10 @@ The API documentation is available at:
 The project is deployed live on Vercel as a unified full-stack serverless application:
 - **Production URL:** [https://scheme-finder-ten-nu.vercel.app](https://scheme-finder-ten-nu.vercel.app)
 
+<p align="center">
+  <img src="docs/screenshots/vercel_live_app_kannada.png" alt="Live Production Deployment Interface on Vercel Edge" width="90%" style="border-radius: 8px; border: 1px solid #e1e4e8;" />
+</p>
+
 ### How It Works:
 1. **Automated Monorepo Build:** `vercel.json` and root `package.json` trigger the Vite build (`npm --prefix scheme-finder-web run build`), compiling the React SPA into static production assets at `scheme-finder-web/dist`.
 2. **Serverless Function Entrypoint (`api/index.py`):** Vercel provisions a high-performance Python 3.12 runtime. `api/index.py` boots the FastAPI application from `scheme-finder-api/app/main.py`.
