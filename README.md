@@ -1,12 +1,28 @@
 # Government Scheme Finder Bot 🏛️
-**Full Stack Technologies Course Project (AAT-1)**  
-**Author:** Naveen Kumar KM (USN: 1NH24CS409), Department of Computer Science & Engineering, New Horizon College of Engineering (NHCE), Bengaluru.
+**Full Stack Technologies Course Project (AAT-1) — Portfolio-Driven Practical Report**  
+**Author:** Naveen Kumar KM (USN: `1NH24CS409`) | **Semester & Section:** 6th Semester, Section 6B  
+**Department:** Department of Computer Science & Engineering, New Horizon College of Engineering (NHCE), Bengaluru.
 
 [![Vercel Deployment](https://img.shields.io/badge/Vercel-Live_Production-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://scheme-finder-ten-nu.vercel.app)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Naveenkm07%2Ffst--att1-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Naveenkm07/fst-att1)
+[![Student](https://img.shields.io/badge/Student-Naveen_Kumar_KM-blue?style=for-the-badge)](https://github.com/Naveenkm07)
+[![USN](https://img.shields.io/badge/USN-1NH24CS409-orange?style=for-the-badge)](https://github.com/Naveenkm07)
+[![Section](https://img.shields.io/badge/Section-6B-success?style=for-the-badge)](https://github.com/Naveenkm07)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React 19](https://img.shields.io/badge/React_19-Vite_SPA-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Python Tests](https://img.shields.io/badge/pytest-15_Passed-4B8BBE?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
+
+---
+
+## 📑 Official Academic Submissions & AAT-1 Reports
+All official project documentation, submission reports, and evaluation archives are organized in [`docs/`](docs/):
+
+| Document / Artifact | Format | Description | File Link |
+| :--- | :---: | :--- | :--- |
+| **AAT-1 Master Technical Report** | `PDF (8 Pages)` | Official academic practical report matching NHCE format with student & faculty signature blocks | [📄 Download PDF](docs/reports/AAT-1_Report_Government_Scheme_Finder_Bot.pdf) |
+| **Application Screenshots Portfolio** | `DOCX (Word)` | Full-resolution visual proof of live Vercel deployment, Kannada forms, results, and DPDP modal | [📸 Download Word Doc](docs/reports/AAT-1_Project_App_Screenshots.docx) |
+| **Important Source Code Compilation** | `DOCX (Word)` | Complete compiled production source code across 10 modules with engineering rationale | [💻 Download Word Doc](docs/reports/AAT-1_Important_Code_Compilation.docx) |
+| **Master Technical Report (Markdown)** | `Markdown` | GitHub-rendered technical report with embedded architecture and tables | [📝 View Markdown](docs/reports/AAT-1_Report_Government_Scheme_Finder_Bot.md) |
 
 ---
 
@@ -114,16 +130,29 @@ A citizen fills out a short, optional 5-question profile (Age, Annual Income, St
 
 ## 5. Repository Layout
 ```
-scheme-finder/
+fst-att1/
   README.md                 # Complete documentation, architecture, and live links
   vercel.json               # Vercel deployment configuration & build scripts
   package.json              # Monorepo build script orchestrating web build
   requirements.txt          # Python dependencies for Vercel deployment runtime
+  start-backend.bat         # One-click Windows launch script for FastAPI
+  start-frontend.bat        # One-click Windows launch script for Vite React
   api/
     index.py                # Vercel Serverless Function entrypoint mounting FastAPI
     requirements.txt        # Serverless Python requirements
   data/
-    schemes.json            # Seed dataset with 7 official government schemes
+    schemes.json            # Seed dataset with official central and state government schemes
+  docs/
+    reports/
+      AAT-1_Report_Government_Scheme_Finder_Bot.pdf   # Official 8-Page Master Report
+      AAT-1_Project_App_Screenshots.docx              # Verification Screenshots Word Doc
+      AAT-1_Important_Code_Compilation.docx           # Complete Production Code Word Doc
+      AAT-1_Report_Government_Scheme_Finder_Bot.md    # Master Technical Markdown Report
+    screenshots/
+      01_kannada_questionnaire_vercel.png             # Live Kannada Demographic Form
+      02_eligibility_results_assistant.png            # PM-KISAN Match & Scheme Bot
+      03_dpdp_cookie_privacy_modal.png                # DPDP Act 2023 Civic Modal
+      04_github_repository_overview.png               # Official GitHub Repo Overview
   scheme-finder-api/
     app/
       __init__.py
@@ -254,10 +283,6 @@ The API documentation is available at:
 The project is deployed live on Vercel as a unified full-stack serverless application:
 - **Production URL:** [https://scheme-finder-ten-nu.vercel.app](https://scheme-finder-ten-nu.vercel.app)
 
-<p align="center">
-  <img src="docs/screenshots/vercel_live_app_kannada.png" alt="Live Production Deployment Interface on Vercel Edge" width="90%" style="border-radius: 8px; border: 1px solid #e1e4e8;" />
-</p>
-
 ### How It Works:
 1. **Automated Monorepo Build:** `vercel.json` and root `package.json` trigger the Vite build (`npm --prefix scheme-finder-web run build`), compiling the React SPA into static production assets at `scheme-finder-web/dist`.
 2. **Serverless Function Entrypoint (`api/index.py`):** Vercel provisions a high-performance Python 3.12 runtime. `api/index.py` boots the FastAPI application from `scheme-finder-api/app/main.py`.
@@ -266,6 +291,38 @@ The project is deployed live on Vercel as a unified full-stack serverless applic
    - All backend routes are bound to `/api/*` (`/api/health`, `/api/eligibility`, `/api/chat`, `/api/schemes/{id}`).
    - **Zero CORS Issues:** Frontend and Backend share the exact same domain origin, guaranteeing zero cross-origin latency or pre-flight blockers.
 4. **Resilient Data Fallback:** The runtime discovers `data/schemes.json` directly via `DATA_DIR` environment variables, operating independently even without an active MongoDB connection.
+
+---
+
+## 📸 Production Verification Gallery
+
+### 1. Bilingual Citizen Questionnaire (Kannada - ಕನ್ನಡ)
+> Real-time demographic questionnaire in native Kannada script on the live Vercel deployment (`https://scheme-finder-ten-nu.vercel.app`), verifying dynamic client-side input validation and responsive styling.
+
+<p align="center">
+  <img src="docs/screenshots/01_kannada_questionnaire_vercel.png" alt="Citizen Demographic Questionnaire in Kannada on Vercel" width="90%" style="border-radius: 8px; border: 1px solid #d1d5db;" />
+</p>
+
+### 2. Grouped Eligibility Results & Grounded Scheme Assistant
+> Deterministic evaluation output showing eligible schemes (PM-KISAN Samman Nidhi), official government portal redirect links, and the grounded bilingual AI Scheme Assistant with persistent student author attribution (`Naveen Kumar KM (1NH24CS409)`).
+
+<p align="center">
+  <img src="docs/screenshots/02_eligibility_results_assistant.png" alt="Eligibility Results and Grounded Assistant" width="90%" style="border-radius: 8px; border: 1px solid #d1d5db;" />
+</p>
+
+### 3. DPDP Act 2023 Civic Privacy & Cookie Governance
+> Transparent citizen privacy modal ensuring complete compliance with India's Digital Personal Data Protection Act (DPDP Act 2023), guaranteeing zero demographic profiling and granular preference management.
+
+<p align="center">
+  <img src="docs/screenshots/03_dpdp_cookie_privacy_modal.png" alt="DPDP Act 2023 Civic Privacy and Cookie Transparency Modal" width="85%" style="border-radius: 8px; border: 1px solid #d1d5db;" />
+</p>
+
+### 4. Official GitHub Repository & Production Commits
+> Public GitHub monorepo (`github.com/Naveenkm07/fst-att1`) displaying continuous integration, clean module segregation, 13+ production commits, and contributor attribution.
+
+<p align="center">
+  <img src="docs/screenshots/04_github_repository_overview.png" alt="Official GitHub Repository Overview" width="90%" style="border-radius: 8px; border: 1px solid #d1d5db;" />
+</p>
 
 ---
 
@@ -541,7 +598,9 @@ The Government Scheme Finder Bot is an academic project built for informational 
 ## 15. Author & Acknowledgements
 - **Student Name:** Naveen Kumar KM
 - **USN:** 1NH24CS409
+- **Semester & Section:** 6th Semester, Section 6B
+- **Department:** Department of Computer Science & Engineering
 - **College:** New Horizon College of Engineering (NHCE), Bengaluru
-- **Course:** Full Stack Technologies (AAT-1)
-- **Academic Year:** 2026
+- **Course:** Full Stack Technologies (22CSE71) — AAT-1
+- **Academic Year:** 2026–2027
 
